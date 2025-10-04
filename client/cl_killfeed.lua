@@ -134,7 +134,7 @@ local weaponNames = setmetatable({
 
 
 
-itizen.CreateThread(function()
+Citizen.CreateThread(function()
     while true do
         Wait(100)
 
