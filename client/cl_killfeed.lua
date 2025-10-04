@@ -132,53 +132,9 @@ local weaponNames = setmetatable({
 
 }, { __index = function() return "Unknown" end })
 
--- -- Main thread to detect deaths
--- Citizen.CreateThread(function()
---     while true do
---         Wait(100)
 
---         for _, playerId in ipairs(GetActivePlayers()) do
---             local ped = GetPlayerPed(playerId)
 
---             if DoesEntityExist(ped) and IsPedDeadOrDying(ped, true) then
---                 if not processedEntities[ped] then
---                     processedEntities[ped] = true
-
---                     local victimServerId = GetPlayerServerId(playerId)
---                     local killerEntity = GetPedSourceOfDeath(ped)
---                     local weaponHash = GetPedCauseOfDeath(ped) or 0
---                     local killerServerId = nil
-
---                     if killerEntity and DoesEntityExist(killerEntity) and IsPedAPlayer(killerEntity) then
---                         local killerPlayerIndex = NetworkGetPlayerIndexFromPed(killerEntity)
---                         if killerPlayerIndex ~= -1 then
---                             killerServerId = GetPlayerServerId(killerPlayerIndex)
---                         end
---                     end
-
---                     -- Only calculate distance on killer's client
---                     local distance = 0.0
---                     if killerServerId == GetPlayerServerId(PlayerId()) then
---                         local killerCoords = GetEntityCoords(PlayerPedId())
---                         local victimCoords = GetEntityCoords(ped)
---                         distance = #(victimCoords - killerCoords)
---                     end
-
---                     local weaponLabel = weaponNames[weaponHash or 0] or "Unknown"
-
---                     -- Trigger server to send notifications only to relevant clients
---                     TriggerServerEvent("killfeed:requestDetails", victimServerId, killerServerId, weaponLabel, distance)
---                 end
---             else
---                 -- Reset ped when alive again (allows multiple kills of same player)
---                 if processedEntities[ped] then
---                     processedEntities[ped] = nil
---                 end
---             end
---         end
---     end
--- end)
-Citizen.CreateThread(function()
+itizen.CreateThread(function()
     while true do
         Wait(100)
 
@@ -241,3 +197,4 @@ RegisterNetEvent("killfeed:sendVictimNotify", function(data)
         data.distance or 0.0
     ))
 end)
+
